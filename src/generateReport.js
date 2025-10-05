@@ -52,6 +52,8 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
         .photo-item { border: 2px solid #ddd; border-radius: 8px; overflow: hidden; }
         .photo-item img { width: 100%; height: auto; display: block; }
         .footer { background: #333; color: white; padding: 20px; text-center; margin-top: 40px; }
+.print-button {          position: fixed;          top: 20px;          right: 20px;          background: #E4002B;          color: white;          padding: 15px 30px;          border: none;          border-radius: 8px;          font-size: 18px;          font-weight: bold;          cursor: pointer;          box-shadow: 0 4px 8px rgba(0,0,0,0.3);          z-index: 1000;        }        .print-button:hover { background: #c00024; }
+        .print-button { display: none; }
         @media print {
           .section { page-break-inside: avoid; }
           body { background: white; }
@@ -59,6 +61,7 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
       </style>
     </head>
     <body>
+      <button class="print-button" onclick="window.print()">🖨️ Print Report</button>
       <div class="container">
         <div class="header">
           <h1>🌶️ Chili's Sticker Placement Audit Report</h1>
