@@ -87,14 +87,17 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
         @media print {
           .action-buttons { display: none !important; }
           .section { page-break-inside: avoid; }
+          #instructions { display: none; }
           body { background: white; }
         }
       </style>
     </head>
     <body>
       <div id="action-buttons" class="action-buttons">
-        <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
-        <button class="btn btn-download" onclick="downloadHTML()">📥 Save Report</button>
+        <button class="btn btn-print" onclick="window.print()">📄 Save as PDF</button>
+      </div>
+      <div id="instructions" style="background: #fff3cd; padding: 15px; margin: 20px; border-radius: 8px; text-align: center; border: 2px solid #ffc107;">
+        <strong>📱 Mobile Users:</strong> Tap "Save as PDF" button, then select "Save to Drive" or "Download as PDF" from print menu.
       </div>
 
       <div id="report-container" class="container">
@@ -208,16 +211,6 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
 
       <script>
         function downloadHTML() {
-          const fileName = 'Chilis_Audit_Report_' + new Date().toISOString().split('T')[0] + '.html';
-          const htmlContent = document.documentElement.outerHTML;
-          const blob = new Blob([htmlContent], { type: 'text/html' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = fileName;
-          link.click();
-          URL.revokeObjectURL(link.href);
-        }
-      </script>
     </body>
     </html>
   `;
