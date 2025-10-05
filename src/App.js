@@ -15,7 +15,7 @@ const sections = [
     ]
   },
   {
-    id: 'togo',
+    id: 'to-go',
     title: 'TO-GO AREA',
     items: [
       { text: 'Staging area labels (PAID, NOT PAID, DELIVERY)', dsi: '005-1462B' },
@@ -45,7 +45,7 @@ const sections = [
     ]
   },
   {
-    id: 'buntoaster',
+    id: 'bun-toaster',
     title: 'BUN TOASTER',
     items: [
       { text: 'SET TO 400°F sticker applied' },
@@ -63,7 +63,7 @@ const sections = [
     ]
   },
   {
-    id: 'hothold',
+    id: 'ck-hot-hold',
     title: 'CK HOT HOLD UNIT',
     items: [
       { text: '15 MINUTE MAX HOLD sign posted' },
@@ -83,7 +83,7 @@ const sections = [
     ]
   },
   {
-    id: 'qa',
+    id: 'qa-passout',
     title: 'QA & PASSOUT',
     items: [
       { text: 'Monin Pump Guide posted' },
@@ -96,7 +96,7 @@ const sections = [
     ]
   },
   {
-    id: 'ice',
+    id: 'ice-machine',
     title: 'ICE MACHINE & HOH',
     items: [
       { text: 'Ecolab Hand-Washing Sticker installed' },
