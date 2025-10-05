@@ -247,7 +247,46 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
           }
 
           const fileName = \`Chilis_Audit_\${('${restaurantName}' || 'Report').replace(/\\s+/g, '_')}_\${('${auditDate}' || 'date').replace(/\\s+/g, '_')}.pdf\`;
-          pdf.save(fileName);
+
+          // Mobile-friendly download with fallback
+          try {
+            // Try blob method first (better for mobile)
+            const pdfBlob = pdf.output('blob');
+            
+            // Check if we're on mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+              // For mobile, create download link and trigger it
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(pdfBlob);
+              link.download = fileName;
+              link.style.display = 'none';
+              document.body.appendChild(link);
+              link.click();
+              
+              // Small delay before cleanup
+              setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+              }, 100);
+              
+              // Show confirmation
+              setTimeout(() => {
+                alert('PDF ready! Check your Downloads folder or notification.');
+              }, 500);
+            } else {
+              // Desktop - use normal save
+              pdf.save(fileName);
+            }
+          } catch (error) {
+            console.error('Download failed:', error);
+            // Fallback: open PDF in new tab
+            const pdfDataUri = pdf.output('dataurlstring');
+            const newWindow = window.open();
+            newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfDataUri + '"></iframe>');
+            alert('Could not download directly. PDF opened in new tab. Use browser menu to save.');
+          }
         }
       </script>
     </body>
