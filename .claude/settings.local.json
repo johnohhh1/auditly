@@ -15,7 +15,10 @@
       "Bash(git remote set-url:*)",
       "Bash(git branch:*)",
       "Bash(npm cache clean:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Read(//c/Users/John/**)",
+      "Bash(rm:*)",
+      "Bash(npm create:*)"
     ],
     "deny": [],
     "ask": []
