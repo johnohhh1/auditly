@@ -135,6 +135,10 @@ function App() {
     setAuditTime(today.toTimeString().split(' ')[0].substring(0, 5));
   }, []);
 
+  if (Object.keys(auditData).length === 0) {
+    return <div>Loading...</div>;
+  }
+
   const toggleSection = (sectionId) => {
     setAuditData(prev => ({
       ...prev,
