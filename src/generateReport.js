@@ -11,9 +11,41 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
     <html>
     <head>
       <title>Chili's Sticker Audit Report - ${restaurantName}</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .action-buttons {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          display: flex;
+          gap: 10px;
+          z-index: 1000;
+        }
+        .btn {
+          padding: 15px 30px;
+          border: none;
+          border-radius: 8px;
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          color: white;
+        }
+        .btn-print {
+          background: #E4002B;
+        }
+        .btn-print:hover {
+          background: #c00024;
+        }
+        .btn-download {
+          background: #4CAF50;
+        }
+        .btn-download:hover {
+          background: #45a049;
+        }
         .container { max-width: 1200px; margin: 0 auto; background: white; }
         .header { background: #E4002B; color: white; padding: 40px; text-center; }
         .header h1 { font-size: 36px; margin-bottom: 10px; }
@@ -25,7 +57,7 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
         .info-value { font-size: 18px; color: #333; }
         .progress-section { padding: 30px; background: #e3f2fd; }
         .progress-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
-        .progress-card { background: white; padding: 20px; text-align: center; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .progress-card { background: white; padding: 20px; text-center; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .progress-value { font-size: 36px; font-weight: bold; color: #E4002B; }
         .progress-label { font-size: 14px; color: #666; margin-top: 5px; }
         .section { page-break-inside: avoid; margin: 30px; border: 2px solid #ddd; border-radius: 12px; overflow: hidden; margin-bottom: 30px; }
@@ -52,17 +84,20 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
         .photo-item { border: 2px solid #ddd; border-radius: 8px; overflow: hidden; }
         .photo-item img { width: 100%; height: auto; display: block; }
         .footer { background: #333; color: white; padding: 20px; text-center; margin-top: 40px; }
-.print-button {          position: fixed;          top: 20px;          right: 20px;          background: #E4002B;          color: white;          padding: 15px 30px;          border: none;          border-radius: 8px;          font-size: 18px;          font-weight: bold;          cursor: pointer;          box-shadow: 0 4px 8px rgba(0,0,0,0.3);          z-index: 1000;        }        .print-button:hover { background: #c00024; }
-        .print-button { display: none; }
         @media print {
+          .action-buttons { display: none !important; }
           .section { page-break-inside: avoid; }
           body { background: white; }
         }
       </style>
     </head>
     <body>
-      <button class="print-button" onclick="window.print()">🖨️ Print Report</button>
-      <div class="container">
+      <div id="action-buttons" class="action-buttons">
+        <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+        <button class="btn btn-download" onclick="downloadPDF()">📥 Download PDF</button>
+      </div>
+
+      <div id="report-container" class="container">
         <div class="header">
           <h1>🌶️ Chili's Sticker Placement Audit Report</h1>
           <p>F26 Q2 - 50 Years Edition</p>
@@ -124,7 +159,7 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
               </div>
               <div class="section-body">
                 <div class="reference-image">
-                  <img src="${window.location.origin}/images/${section.id}-reference.png" alt="${section.title} Reference" onerror="this.style.display='none'"/>
+                  <img src="${window.location.origin}/images/${section.id}-reference.png" alt="${section.title} Reference" onerror="this.style.display='none'" crossorigin="anonymous"/>
                   <p>Reference Image</p>
                 </div>
 
@@ -154,7 +189,7 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
                     <div class="photos-grid">
                       ${data.photos.map(photo => `
                         <div class="photo-item">
-                          <img src="${photo}" alt="Verification photo"/>
+                          <img src="${photo}" alt="Verification photo" crossorigin="anonymous"/>
                         </div>
                       `).join('')}
                     </div>
@@ -170,6 +205,51 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
           <p style="margin-top: 10px;">Chili's Sticker Placement Audit System</p>
         </div>
       </div>
+
+      <script>
+        async function downloadPDF() {
+          const container = document.getElementById('report-container');
+          const buttons = document.getElementById('action-buttons');
+
+          buttons.style.display = 'none';
+
+          const canvas = await html2canvas(container, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+          });
+
+          buttons.style.display = 'flex';
+
+          const imgData = canvas.toDataURL('image/png');
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const imgWidth = canvas.width;
+          const imgHeight = canvas.height;
+          const ratio = pdfWidth / (imgWidth / 2);
+          const imgX = 0;
+          const imgY = 0;
+
+          let heightLeft = (imgHeight / 2) * ratio;
+          let position = 0;
+
+          pdf.addImage(imgData, 'PNG', imgX, imgY, pdfWidth, (imgHeight / 2) * ratio);
+          heightLeft -= pdfHeight;
+
+          while (heightLeft > 0) {
+            position -= pdfHeight / ratio * 2;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', imgX, position * ratio, pdfWidth, (imgHeight / 2) * ratio);
+            heightLeft -= pdfHeight;
+          }
+
+          const fileName = \`Chilis_Audit_\${('${restaurantName}' || 'Report').replace(/\\s+/g, '_')}_\${('${auditDate}' || 'date').replace(/\\s+/g, '_')}.pdf\`;
+          pdf.save(fileName);
+        }
+      </script>
     </body>
     </html>
   `;

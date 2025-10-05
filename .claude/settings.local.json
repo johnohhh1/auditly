@@ -18,7 +18,8 @@
       "Bash(timeout:*)",
       "Read(//c/Users/John/**)",
       "Bash(rm:*)",
-      "Bash(npm create:*)"
+      "Bash(npm create:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
