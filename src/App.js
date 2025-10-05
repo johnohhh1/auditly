@@ -375,21 +375,30 @@ function App() {
                         </button>
                       </div>
 
-                      {/* Checklist */}
-                      <div className="space-y-2 mb-4">
+                      {/* Checklist - Mobile Friendly */}
+                      <div className="space-y-3 mb-4">
                         {section.items.map((item, index) => (
-                          <div key={index} className="flex items-start bg-gray-50 p-3 rounded-lg">
-                            <input
-                              type="checkbox"
-                              checked={auditData[section.id]?.checkedItems.includes(index)}
-                              onChange={(e) => updateChecklist(section.id, index, e.target.checked)}
-                              className="mt-1 mr-3 w-4 h-4 text-chilis-red focus:ring-chilis-red"
-                            />
-                            <label className="flex-1 text-sm">
-                              {item.text}
-                              {item.dsi && <span className="text-gray-500 ml-2 text-xs">(DSI: {item.dsi})</span>}
-                            </label>
-                          </div>
+                          <button
+                            key={index}
+                            onClick={() => updateChecklist(section.id, index, !auditData[section.id]?.checkedItems.includes(index))}
+                            className={\`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-3 active:scale-95 \${
+                              auditData[section.id]?.checkedItems.includes(index)
+                                ? 'bg-green-50 border-green-500 shadow-md'
+                                : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow'
+                            }\`}
+                          >
+                            <div className={\`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl \${
+                              auditData[section.id]?.checkedItems.includes(index)
+                                ? 'bg-green-500 text-white'
+                                : 'bg-gray-200 text-gray-400'
+                            }\`}>
+                              {auditData[section.id]?.checkedItems.includes(index) ? '✓' : '○'}
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-medium text-gray-900">{item.text}</div>
+                              {item.dsi && <div className="text-xs text-gray-500 mt-1">DSI: {item.dsi}</div>}
+                            </div>
+                          </button>
                         ))}
                       </div>
 
@@ -414,13 +423,10 @@ function App() {
                           className="hidden"
                           id={`photo-input-${section.id}`}
                         />
-                        <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mb-3"
-                          onClick={() => document.getElementById(`photo-input-${section.id}`).click()}
-                        >
-                          📷 Add Photo
-                        </button>
-                        <div className="grid grid-cols-3 gap-2">
+                        <label htmlFor={`photo-input-${section.id}`} className="block w-full bg-blue-500 text-white px-6 py-4 rounded-xl hover:bg-blue-600 transition-colors mb-4 text-center font-bold cursor-pointer active:scale-95">
+                          📷 Add Photos
+                        </label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                           {auditData[section.id]?.photos.map((photo, index) => (
                             <div key={index} className="relative group">
                               <img
@@ -460,6 +466,5 @@ function App() {
       )}
     </div>
   );
-}
 
 export default App;
