@@ -381,17 +381,17 @@ function App() {
                           <button
                             key={index}
                             onClick={() => updateChecklist(section.id, index, !auditData[section.id]?.checkedItems.includes(index))}
-                            className={\`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-3 active:scale-95 \${
+                            className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-3 active:scale-95 ${
                               auditData[section.id]?.checkedItems.includes(index)
                                 ? 'bg-green-50 border-green-500 shadow-md'
                                 : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow'
-                            }\`}
+                            }`}
                           >
-                            <div className={\`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl \${
+                            <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl ${
                               auditData[section.id]?.checkedItems.includes(index)
                                 ? 'bg-green-500 text-white'
                                 : 'bg-gray-200 text-gray-400'
-                            }\`}>
+                            }`}>
                               {auditData[section.id]?.checkedItems.includes(index) ? '✓' : '○'}
                             </div>
                             <div className="flex-1">
@@ -466,5 +466,6 @@ function App() {
       )}
     </div>
   );
+}
 
 export default App;
