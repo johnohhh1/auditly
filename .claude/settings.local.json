@@ -3,7 +3,14 @@
     "allow": [
       "Bash(npm run build:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nFix white screen deployment issue\n\nRemoved AppTest.js which was causing module resolution conflicts.\nThe build system was potentially importing the wrong App component.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix white screen deployment issue\n\nRemoved AppTest.js which was causing module resolution conflicts.\nThe build system was potentially importing the wrong App component.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npx serve:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:stickerplacementaudit-2p1jay0yz-johns-projects-d95753aa.vercel.app)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

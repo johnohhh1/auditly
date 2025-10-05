@@ -1,121 +1,119 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+
+const sections = [
+  {
+    id: 'doors',
+    title: 'DOORS',
+    items: [
+      { text: 'HOH Back Door - STOP sign (1 hour gate notice)', dsi: '005-1866' },
+      { text: 'HOH Back Door - Door Alarm sign', dsi: '005-1493' },
+      { text: 'Office Door - TM Referral Poster', dsi: '005-1817TM' },
+      { text: 'Office Door - TM Hotline Flyer', dsi: '001-004' },
+      { text: 'Office Door - E-Verify & Right to Work posted' },
+      { text: 'Front doors have NO postings (verified)' },
+      { text: 'To-Go doors have NO postings (verified)' }
+    ]
+  },
+  {
+    id: 'togo',
+    title: 'TO-GO AREA',
+    items: [
+      { text: 'Staging area labels (PAID, NOT PAID, DELIVERY)', dsi: '005-1462B' },
+      { text: '"Please Go to the Bar" sign available' },
+      { text: 'Tip jar placed on counter in guest view' },
+      { text: 'To-Go parking signs installed outside' },
+      { text: 'All staging shelves properly labeled' }
+    ]
+  },
+  {
+    id: 'cookline',
+    title: 'COOK LINE - FLAT TOP',
+    items: [
+      { text: 'Flat top timers installed (SET OF 4)' },
+      { text: 'Steak cooking guide visible and legible' },
+      { text: 'Temperature dial at 400°F marking' }
+    ]
+  },
+  {
+    id: 'fryer',
+    title: 'FRYER',
+    items: [
+      { text: 'Fryer Help button stickers applied' },
+      { text: 'Fryer Stats temperature guides posted' },
+      { text: 'Henny Penny button stickers installed' },
+      { text: 'Surface cleaned before sticker application' }
+    ]
+  },
+  {
+    id: 'buntoaster',
+    title: 'BUN TOASTER',
+    items: [
+      { text: 'SET TO 400°F sticker applied' },
+      { text: 'TURN ON 10:30 AM reminder visible' },
+      { text: 'Sticker valid for APW Bun Toaster (verified)' }
+    ]
+  },
+  {
+    id: 'microwave',
+    title: 'MICROWAVE',
+    items: [
+      { text: 'Zone 1 OR Zone 2 strip applied' },
+      { text: 'Programming instructions available' },
+      { text: 'Timer presets match sticker guide' }
+    ]
+  },
+  {
+    id: 'hothold',
+    title: 'CK HOT HOLD UNIT',
+    items: [
+      { text: '15 MINUTE MAX HOLD sign posted' },
+      { text: 'TURN ON AT 10:30 AM reminder visible' }
+    ]
+  },
+  {
+    id: 'prep',
+    title: 'PREP & DISH',
+    items: [
+      { text: '3-compartment sink labels installed' },
+      { text: 'Prep scale labels (Protein/Vegetable/Other)' },
+      { text: 'Rethermalizer 30 MIN and 60 MIN labels' },
+      { text: 'Dish area glassware organization labels' },
+      { text: 'Steak markers (Medium Rare - 5 total)' },
+      { text: 'Dredge shakers (CK Cajun - 10 total)' }
+    ]
+  },
+  {
+    id: 'qa',
+    title: 'QA & PASSOUT',
+    items: [
+      { text: 'Monin Pump Guide posted' },
+      { text: 'Strawberry Lemonade chart visible' },
+      { text: 'Sweet/Unsweet Tea labels applied' },
+      { text: 'Dessert station microwave settings posted' },
+      { text: 'Dessert Rail Chart installed' },
+      { text: 'Induction buttons covered (except 60 seconds)' },
+      { text: 'Soup rail organization labels' }
+    ]
+  },
+  {
+    id: 'ice',
+    title: 'ICE MACHINE & HOH',
+    items: [
+      { text: 'Ecolab Hand-Washing Sticker installed' },
+      { text: 'DO NOT HIT warning label applied' },
+      { text: 'HOH Shelf Labels installed', dsi: '005-1461' },
+      { text: 'All hand wash sinks have stickers (excluding restrooms)' }
+    ]
+  }
+];
 
 function App() {
   const [auditData, setAuditData] = useState({});
-  const [currentPhotoSection, setCurrentPhotoSection] = useState('');
   const [restaurantName, setRestaurantName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditDate, setAuditDate] = useState('');
   const [auditTime, setAuditTime] = useState('');
   const [modalImage, setModalImage] = useState('');
-
-  const sections = [
-    {
-      id: 'doors',
-      title: 'DOORS',
-      items: [
-        { text: 'HOH Back Door - STOP sign (1 hour gate notice)', dsi: '005-1866' },
-        { text: 'HOH Back Door - Door Alarm sign', dsi: '005-1493' },
-        { text: 'Office Door - TM Referral Poster', dsi: '005-1817TM' },
-        { text: 'Office Door - TM Hotline Flyer', dsi: '001-004' },
-        { text: 'Office Door - E-Verify & Right to Work posted' },
-        { text: 'Front doors have NO postings (verified)' },
-        { text: 'To-Go doors have NO postings (verified)' }
-      ]
-    },
-    {
-      id: 'togo',
-      title: 'TO-GO AREA',
-      items: [
-        { text: 'Staging area labels (PAID, NOT PAID, DELIVERY)', dsi: '005-1462B' },
-        { text: '"Please Go to the Bar" sign available' },
-        { text: 'Tip jar placed on counter in guest view' },
-        { text: 'To-Go parking signs installed outside' },
-        { text: 'All staging shelves properly labeled' }
-      ]
-    },
-    {
-      id: 'cookline',
-      title: 'COOK LINE - FLAT TOP',
-      items: [
-        { text: 'Flat top timers installed (SET OF 4)' },
-        { text: 'Steak cooking guide visible and legible' },
-        { text: 'Temperature dial at 400°F marking' }
-      ]
-    },
-    {
-      id: 'fryer',
-      title: 'FRYER',
-      items: [
-        { text: 'Fryer Help button stickers applied' },
-        { text: 'Fryer Stats temperature guides posted' },
-        { text: 'Henny Penny button stickers installed' },
-        { text: 'Surface cleaned before sticker application' }
-      ]
-    },
-    {
-      id: 'buntoaster',
-      title: 'BUN TOASTER',
-      items: [
-        { text: 'SET TO 400°F sticker applied' },
-        { text: 'TURN ON 10:30 AM reminder visible' },
-        { text: 'Sticker valid for APW Bun Toaster (verified)' }
-      ]
-    },
-    {
-      id: 'microwave',
-      title: 'MICROWAVE',
-      items: [
-        { text: 'Zone 1 OR Zone 2 strip applied' },
-        { text: 'Programming instructions available' },
-        { text: 'Timer presets match sticker guide' }
-      ]
-    },
-    {
-      id: 'hothold',
-      title: 'CK HOT HOLD UNIT',
-      items: [
-        { text: '15 MINUTE MAX HOLD sign posted' },
-        { text: 'TURN ON AT 10:30 AM reminder visible' }
-      ]
-    },
-    {
-      id: 'prep',
-      title: 'PREP & DISH',
-      items: [
-        { text: '3-compartment sink labels installed' },
-        { text: 'Prep scale labels (Protein/Vegetable/Other)' },
-        { text: 'Rethermalizer 30 MIN and 60 MIN labels' },
-        { text: 'Dish area glassware organization labels' },
-        { text: 'Steak markers (Medium Rare - 5 total)' },
-        { text: 'Dredge shakers (CK Cajun - 10 total)' }
-      ]
-    },
-    {
-      id: 'qa',
-      title: 'QA & PASSOUT',
-      items: [
-        { text: 'Monin Pump Guide posted' },
-        { text: 'Strawberry Lemonade chart visible' },
-        { text: 'Sweet/Unsweet Tea labels applied' },
-        { text: 'Dessert station microwave settings posted' },
-        { text: 'Dessert Rail Chart installed' },
-        { text: 'Induction buttons covered (except 60 seconds)' },
-        { text: 'Soup rail organization labels' }
-      ]
-    },
-    {
-      id: 'ice',
-      title: 'ICE MACHINE & HOH',
-      items: [
-        { text: 'Ecolab Hand-Washing Sticker installed' },
-        { text: 'DO NOT HIT warning label applied' },
-        { text: 'HOH Shelf Labels installed', dsi: '005-1461' },
-        { text: 'All hand wash sinks have stickers (excluding restrooms)' }
-      ]
-    }
-  ];
 
   useEffect(() => {
     const initialData = {};
@@ -134,10 +132,6 @@ function App() {
     setAuditDate(today.toISOString().split('T')[0]);
     setAuditTime(today.toTimeString().split(' ')[0].substring(0, 5));
   }, []);
-
-  if (Object.keys(auditData).length === 0) {
-    return <div>Loading...</div>;
-  }
 
   const toggleSection = (sectionId) => {
     setAuditData(prev => ({
@@ -164,7 +158,7 @@ function App() {
       const checkedItems = checked
         ? [...prev[sectionId].checkedItems, itemIndex]
         : prev[sectionId].checkedItems.filter(i => i !== itemIndex);
-      
+
       return {
         ...prev,
         [sectionId]: {
@@ -220,166 +214,211 @@ function App() {
     return { evaluated, passed, total, passRate };
   };
 
+  if (Object.keys(auditData).length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center">
+        <div className="text-white text-2xl">Loading...</div>
+      </div>
+    );
+  }
+
   const progress = getProgress();
 
   return (
-    <div className="App">
-      <div className="container">
-        <div className="header">
-          <h1>🌶️ Chili's Sticker Placement Audit</h1>
-          <div className="subtitle">F26 Q2 - 50 Years Edition</div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 to-purple-800 p-4 sm:p-6">
+      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-chilis-red text-white p-8 text-center">
+          <h1 className="text-4xl font-bold mb-2">🌶️ Chili's Sticker Placement Audit</h1>
+          <div className="text-xl opacity-90">F26 Q2 - 50 Years Edition</div>
         </div>
 
-        <div className="restaurant-info">
-          <div className="info-field">
-            <label>Restaurant Name/Number</label>
-            <input 
-              type="text" 
+        {/* Restaurant Info */}
+        <div className="bg-gray-50 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Restaurant Name/Number</label>
+            <input
+              type="text"
               value={restaurantName}
               onChange={(e) => setRestaurantName(e.target.value)}
               placeholder="Enter restaurant name"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-chilis-red"
             />
           </div>
-          <div className="info-field">
-            <label>Auditor Name</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Auditor Name</label>
+            <input
+              type="text"
               value={auditorName}
               onChange={(e) => setAuditorName(e.target.value)}
               placeholder="Your name"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-chilis-red"
             />
           </div>
-          <div className="info-field">
-            <label>Date</label>
-            <input 
-              type="date" 
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Date</label>
+            <input
+              type="date"
               value={auditDate}
               onChange={(e) => setAuditDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-chilis-red"
             />
           </div>
-          <div className="info-field">
-            <label>Time</label>
-            <input 
-              type="time" 
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Time</label>
+            <input
+              type="time"
               value={auditTime}
               onChange={(e) => setAuditTime(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-chilis-red"
             />
           </div>
         </div>
 
-        <div className="progress-section">
-          <h3>Audit Progress</h3>
-          <div className="progress-grid">
-            <div className="progress-card">
-              <div className="number">{progress.evaluated}</div>
-              <div className="label">Evaluated</div>
+        {/* Progress Section */}
+        <div className="bg-blue-50 p-6 m-6 rounded-xl">
+          <h3 className="text-xl font-bold mb-4">Audit Progress</h3>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white p-4 rounded-lg shadow text-center">
+              <div className="text-3xl font-bold text-chilis-red">{progress.evaluated}</div>
+              <div className="text-sm text-gray-600 mt-1">Evaluated</div>
             </div>
-            <div className="progress-card">
-              <div className="number">{progress.passed}</div>
-              <div className="label">Passed</div>
+            <div className="bg-white p-4 rounded-lg shadow text-center">
+              <div className="text-3xl font-bold text-chilis-red">{progress.passed}</div>
+              <div className="text-sm text-gray-600 mt-1">Passed</div>
             </div>
-            <div className="progress-card">
-              <div className="number">{progress.total}</div>
-              <div className="label">Total Sections</div>
+            <div className="bg-white p-4 rounded-lg shadow text-center">
+              <div className="text-3xl font-bold text-chilis-red">{progress.total}</div>
+              <div className="text-sm text-gray-600 mt-1">Total Sections</div>
             </div>
-            <div className="progress-card">
-              <div className="number">{progress.passRate}%</div>
-              <div className="label">Pass Rate</div>
+            <div className="bg-white p-4 rounded-lg shadow text-center">
+              <div className="text-3xl font-bold text-chilis-red">{progress.passRate}%</div>
+              <div className="text-sm text-gray-600 mt-1">Pass Rate</div>
             </div>
           </div>
         </div>
 
-        <div className="sections-container">
+        {/* Sections */}
+        <div className="p-6 space-y-4">
           {sections.map(section => (
-            <div key={section.id} className="section-card">
-              <div className="section-header" onClick={() => toggleSection(section.id)}>
-                <div className="section-title">{section.title}</div>
-                <div className="section-status">
-                  <span className={`status-indicator status-${auditData[section.id]?.status || 'pending'}`}>
-                    {auditData[section.id]?.status === 'pass' ? '✓' : auditData[section.id]?.status === 'fail' ? '✗' : ''}
-                  </span>
+            <div key={section.id} className="border border-gray-200 rounded-xl overflow-hidden shadow-md">
+              {/* Section Header */}
+              <div
+                className="bg-gray-800 text-white p-4 cursor-pointer hover:bg-gray-700 transition-colors flex justify-between items-center"
+                onClick={() => toggleSection(section.id)}
+              >
+                <div className="text-lg font-bold">{section.title}</div>
+                <div className="flex items-center gap-2">
+                  {auditData[section.id]?.status === 'pass' && (
+                    <span className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">✓</span>
+                  )}
+                  {auditData[section.id]?.status === 'fail' && (
+                    <span className="bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">✗</span>
+                  )}
+                  {!auditData[section.id]?.status && (
+                    <span className="bg-gray-400 w-8 h-8 rounded-full"></span>
+                  )}
                 </div>
               </div>
 
+              {/* Section Content */}
               {auditData[section.id]?.expanded && (
-                <div className="section-content">
-                  <div className="content-grid">
-                    <div className="reference-image">
-                      <h4>Reference Guide - {section.title}</h4>
-                      <img 
+                <div className="p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Reference Image */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">Reference Guide - {section.title}</h4>
+                      <img
                         src={`/images/${section.id}-reference.png`}
-                        alt={`${section.title} Reference`}
+                        alt={`${section.title} Reference Guide`}
                         onClick={() => setModalImage(`/images/${section.id}-reference.png`)}
+                        className="w-full rounded-lg cursor-zoom-in hover:opacity-90 transition-opacity"
                       />
-                      <p>Click to enlarge reference image</p>
+                      <p className="text-sm text-gray-600 mt-2">Click to enlarge reference guide</p>
                     </div>
 
-                    <div className="audit-controls">
-                      <div className="status-buttons">
-                        <button 
-                          className={`status-btn pass ${auditData[section.id]?.status === 'pass' ? 'active' : ''}`}
+                    {/* Audit Controls */}
+                    <div>
+                      {/* Status Buttons */}
+                      <div className="flex gap-3 mb-4">
+                        <button
+                          className={`flex-1 py-3 px-4 rounded-lg font-bold border-2 transition-all ${
+                            auditData[section.id]?.status === 'pass'
+                              ? 'bg-green-500 text-white border-green-500'
+                              : 'bg-white text-green-500 border-green-500 hover:bg-green-50'
+                          }`}
                           onClick={() => setStatus(section.id, 'pass')}
                         >
                           ✓ Pass
                         </button>
-                        <button 
-                          className={`status-btn fail ${auditData[section.id]?.status === 'fail' ? 'active' : ''}`}
+                        <button
+                          className={`flex-1 py-3 px-4 rounded-lg font-bold border-2 transition-all ${
+                            auditData[section.id]?.status === 'fail'
+                              ? 'bg-red-500 text-white border-red-500'
+                              : 'bg-white text-red-500 border-red-500 hover:bg-red-50'
+                          }`}
                           onClick={() => setStatus(section.id, 'fail')}
                         >
                           ✗ Fail
                         </button>
                       </div>
 
-                      <div className="checklist">
+                      {/* Checklist */}
+                      <div className="space-y-2 mb-4">
                         {section.items.map((item, index) => (
-                          <div key={index} className="checklist-item">
-                            <input 
+                          <div key={index} className="flex items-start bg-gray-50 p-3 rounded-lg">
+                            <input
                               type="checkbox"
                               checked={auditData[section.id]?.checkedItems.includes(index)}
                               onChange={(e) => updateChecklist(section.id, index, e.target.checked)}
+                              className="mt-1 mr-3 w-4 h-4 text-chilis-red focus:ring-chilis-red"
                             />
-                            <label className="checklist-text">
+                            <label className="flex-1 text-sm">
                               {item.text}
-                              {item.dsi && <span className="dsi-number">(DSI: {item.dsi})</span>}
+                              {item.dsi && <span className="text-gray-500 ml-2 text-xs">(DSI: {item.dsi})</span>}
                             </label>
                           </div>
                         ))}
                       </div>
 
-                      <div className="notes-section">
-                        <label>Notes:</label>
-                        <textarea 
+                      {/* Notes */}
+                      <div className="mb-4">
+                        <label className="block font-semibold mb-2">Notes:</label>
+                        <textarea
                           value={auditData[section.id]?.notes || ''}
                           onChange={(e) => updateNotes(section.id, e.target.value)}
                           placeholder="Add any observations or issues..."
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-chilis-red resize-y min-h-20"
                         />
                       </div>
 
-                      <div className="photo-upload">
-                        <input 
-                          type="file" 
-                          accept="image/*" 
+                      {/* Photo Upload */}
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
                           multiple
                           onChange={(e) => handlePhotoUpload(section.id, e)}
-                          style={{display: 'none'}}
+                          className="hidden"
                           id={`photo-input-${section.id}`}
                         />
-                        <button 
-                          className="photo-btn"
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mb-3"
                           onClick={() => document.getElementById(`photo-input-${section.id}`).click()}
                         >
                           📷 Add Photo
                         </button>
-                        <div className="photo-grid">
+                        <div className="grid grid-cols-3 gap-2">
                           {auditData[section.id]?.photos.map((photo, index) => (
-                            <div key={index} className="photo-item">
-                              <img 
-                                src={photo} 
-                                alt={`Photo ${index + 1}`}
+                            <div key={index} className="relative group">
+                              <img
+                                src={photo}
+                                alt={`Upload ${index + 1}`}
                                 onClick={() => setModalImage(photo)}
+                                className="w-full h-24 object-cover rounded-lg cursor-zoom-in"
                               />
-                              <button 
-                                className="remove-photo"
+                              <button
+                                className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full hover:bg-red-600 text-sm"
                                 onClick={() => removePhoto(section.id, index)}
                               >
                                 ×
@@ -397,10 +436,14 @@ function App() {
         </div>
       </div>
 
+      {/* Modal */}
       {modalImage && (
-        <div className="modal" onClick={() => setModalImage('')}>
-          <span className="modal-close">×</span>
-          <img src={modalImage} alt="Enlarged view" />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+          onClick={() => setModalImage('')}
+        >
+          <span className="absolute top-8 right-12 text-white text-5xl cursor-pointer hover:text-gray-300">×</span>
+          <img src={modalImage} alt="Enlarged view" className="max-w-full max-h-full rounded-xl" />
         </div>
       )}
     </div>
