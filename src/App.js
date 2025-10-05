@@ -1,3 +1,4 @@
+import { generateReport } from './generateReport';
 import React, { useState, useEffect } from 'react';
 
 const sections = [
@@ -296,6 +297,17 @@ function App() {
               <div className="text-sm text-gray-600 mt-1">Pass Rate</div>
             </div>
           </div>
+        </div>
+
+        {/* Generate Report Button */}
+        <div className="p-6 pt-0">
+          <button
+            onClick={() => generateReport(sections, auditData, restaurantName, auditorName, auditDate, auditTime)}
+            className="w-full bg-chilis-red text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-red-700 transition-colors shadow-lg flex items-center justify-center gap-2"
+          >
+            <span className="text-2xl">📄</span>
+            Generate Complete Audit Report
+          </button>
         </div>
 
         {/* Sections */}
