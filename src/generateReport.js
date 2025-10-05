@@ -94,7 +94,7 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
     <body>
       <div id="action-buttons" class="action-buttons">
         <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
-        <button class="btn btn-download" onclick="downloadPDF()">📥 Download PDF</button>
+        <button class="btn btn-download" onclick="downloadHTML()">📥 Save Report</button>
       </div>
 
       <div id="report-container" class="container">
@@ -207,86 +207,15 @@ export const generateReport = (sections, auditData, restaurantName, auditorName,
       </div>
 
       <script>
-        async function downloadPDF() {
-          const container = document.getElementById('report-container');
-          const buttons = document.getElementById('action-buttons');
-
-          buttons.style.display = 'none';
-
-          const canvas = await html2canvas(container, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff'
-          });
-
-          buttons.style.display = 'flex';
-
-          const imgData = canvas.toDataURL('image/png');
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const imgWidth = canvas.width;
-          const imgHeight = canvas.height;
-          const ratio = pdfWidth / (imgWidth / 2);
-          const imgX = 0;
-          const imgY = 0;
-
-          let heightLeft = (imgHeight / 2) * ratio;
-          let position = 0;
-
-          pdf.addImage(imgData, 'PNG', imgX, imgY, pdfWidth, (imgHeight / 2) * ratio);
-          heightLeft -= pdfHeight;
-
-          while (heightLeft > 0) {
-            position -= pdfHeight / ratio * 2;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', imgX, position * ratio, pdfWidth, (imgHeight / 2) * ratio);
-            heightLeft -= pdfHeight;
-          }
-
-          const fileName = \`Chilis_Audit_\${('${restaurantName}' || 'Report').replace(/\\s+/g, '_')}_\${('${auditDate}' || 'date').replace(/\\s+/g, '_')}.pdf\`;
-
-          // Mobile-friendly download with fallback
-          try {
-            // Try blob method first (better for mobile)
-            const pdfBlob = pdf.output('blob');
-            
-            // Check if we're on mobile
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            if (isMobile) {
-              // For mobile, create download link and trigger it
-              const link = document.createElement('a');
-              link.href = URL.createObjectURL(pdfBlob);
-              link.download = fileName;
-              link.style.display = 'none';
-              document.body.appendChild(link);
-              link.click();
-              
-              // Small delay before cleanup
-              setTimeout(() => {
-                document.body.removeChild(link);
-                URL.revokeObjectURL(link.href);
-              }, 100);
-              
-              // Show confirmation
-              setTimeout(() => {
-                alert('PDF ready! Check your Downloads folder or notification.');
-              }, 500);
-            } else {
-              // Desktop - use normal save
-              pdf.save(fileName);
-            }
-          } catch (error) {
-            console.error('Download failed:', error);
-            // Fallback: open PDF in new tab
-            const pdfDataUri = pdf.output('dataurlstring');
-            const newWindow = window.open();
-            newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfDataUri + '"></iframe>');
-            alert('Could not download directly. PDF opened in new tab. Use browser menu to save.');
-          }
+        function downloadHTML() {
+          const fileName = 'Chilis_Audit_Report_' + new Date().toISOString().split('T')[0] + '.html';
+          const htmlContent = document.documentElement.outerHTML;
+          const blob = new Blob([htmlContent], { type: 'text/html' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+          URL.revokeObjectURL(link.href);
         }
       </script>
     </body>
